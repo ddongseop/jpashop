@@ -10,6 +10,7 @@ import jpabook.jpashop.repository.order.query.OrderFlatDto;
 import jpabook.jpashop.repository.order.query.OrderItemQueryDto;
 import jpabook.jpashop.repository.order.query.OrderQueryDto;
 import jpabook.jpashop.repository.order.query.OrderQueryRepository;
+import jpabook.jpashop.service.query.OrderQueryService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,15 +53,19 @@ public class OrderApiController {
         //xToMany: 컬렉션을 가져와야 해서 쿼리가 훨씬 더 많이 나감
     }
 
-    @GetMapping("/api/v3/orders")
-    public List<OrderDto> orderV3() {
-        List<Order> orders = orderRepository.findAllWithItem();
-        List<OrderDto> result = orders.stream()
-                .map(o -> new OrderDto(o))
-                .collect(toList());
+    private final OrderQueryService orderQueryService; //OSIV 고려
 
-        return result;
-        //페치 조인으로 해결, but 페이징이 안됨
+    @GetMapping("/api/v3/orders")
+    public List<jpabook.jpashop.service.query.OrderDto> orderV3() {
+        return orderQueryService.orderV3(); //OSIV 고려
+
+//        List<Order> orders = orderRepository.findAllWithItem();
+//        List<OrderDto> result = orders.stream()
+//                .map(o -> new OrderDto(o))
+//                .collect(toList());
+//
+//        return result;
+//        //페치 조인으로 해결, but 페이징이 안됨
     }
 
     @GetMapping("/api/v3.1/orders")
